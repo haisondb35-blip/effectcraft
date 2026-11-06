@@ -18,6 +18,7 @@ pub const UPDATE_APP: craft_update::app::App = craft_update::app::App {
     ..craft_update::suite::EFFECTCRAFT
 };
 
+pub mod assistant;
 pub mod audio;
 pub mod automation;
 pub mod bench;
@@ -290,6 +291,9 @@ pub struct EffectcraftApp {
     /// The viewer scale the last UI pass drew at: playback prefetches without a viewer pass.
     last_viewer_scale: Option<f64>,
     pub(crate) control_rx: Option<Receiver<ControlRequest>>,
+    /// The AI Assistant pane (Window > AI Assistant) and whether it is shown.
+    pub assistant: assistant::Assistant,
+    pub assistant_open: bool,
     pub(crate) deferred: Vec<(ControlRequest, f64)>,
     pub(crate) synthetic: Vec<egui::Event>,
     /// Input from floating panels' own OS windows for the main window's next frame.

@@ -63,6 +63,8 @@ impl EffectcraftApp {
             synthetic_in_flight_events: vec![],
             last_viewer_scale: None,
             control_rx: None,
+            assistant: crate::assistant::Assistant::default(),
+            assistant_open: false,
             deferred: vec![],
             synthetic: vec![],
             forwarded: ForwardedInput::default(),

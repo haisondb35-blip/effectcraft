@@ -84,7 +84,11 @@ pub(crate) fn entry_checked(app: &EffectcraftApp, e: &MenuEntry) -> Option<bool>
         "playback.audio" => Some(app.session.prefs.preview.active().include_audio),
         "window.workspace" => Some(pstr("name").is_some_and(|n| n == app.ui.workspace)),
         // The Tools panel is the header toolbar: always on screen.
-        "window.panel" => Some(pstr("panel").is_some_and(|n| n.eq_ignore_ascii_case("tools") || PanelKind::from_name(n).is_some_and(|p| panel_shown(app, p)))),
+        "window.panel" => Some(pstr("panel").is_some_and(|n| {
+            (n.eq_ignore_ascii_case("assistant") && app.assistant_open)
+                || n.eq_ignore_ascii_case("tools")
+                || PanelKind::from_name(n).is_some_and(|p| panel_shown(app, p))
+        })),
         "view.panelBackground" if e.params.get("pick").is_none() => {
             let cur = match v.pasteboard {
                 None => "mediumGray",

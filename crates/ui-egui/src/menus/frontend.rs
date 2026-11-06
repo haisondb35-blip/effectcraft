@@ -311,6 +311,11 @@ pub fn frontend(app: &mut EffectcraftApp, ctx: &egui::Context, id: &str, p: Valu
         }
         "window.panel" => {
             let name = p.get("panel").and_then(Value::as_str).unwrap_or_default();
+            // brian-local: Window > AI Assistant shows or hides the assistant pane.
+            if name.eq_ignore_ascii_case("assistant") {
+                app.assistant_open = !app.assistant_open;
+                return Ok(Value::Bool(app.assistant_open));
+            }
             if name.eq_ignore_ascii_case("tools") {
                 app.ui.status = "The Tools panel is the toolbar in the header".into();
                 return Ok(Value::Null);

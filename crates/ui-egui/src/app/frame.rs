@@ -19,10 +19,20 @@ impl EffectcraftApp {
     /// input/job/screenshot replies until their event happens and finish job waiters. Retry timeouts and refused
     /// screenshots are answered as `{"ok": false, "error": ...}`; the receiver is kept for the next tick.
     fn drain_control(&mut self, ctx: &egui::Context, now: f64) {
-        let Some(rx) = self.control_rx.take() else { return };
+        // Open from the start and listed for the other Craft apps (once).
+        self.assistant.share(ctx);
+        let rx = self.control_rx.take();
         let mut reqs: Vec<(ControlRequest, f64)> = std::mem::take(&mut self.deferred);
-        while let Ok(req) = rx.try_recv() {
-            reqs.push((req, now + 3.0));
+        if let Some(rx) = &rx {
+            while let Ok(req) = rx.try_recv() {
+                reqs.push((req, now + 3.0));
+            }
+        }
+        // The AI Assistant pane's own channel, driven by the Claude (or Codex) it started.
+        if let Some(arx) = &self.assistant.control_rx {
+            while let Ok(req) = arx.try_recv() {
+                reqs.push((req, now + 3.0));
+            }
         }
         for (req, deadline) in reqs {
             let reply = req.reply.clone();
@@ -61,7 +71,7 @@ impl EffectcraftApp {
                 }
             }
         }
-        self.control_rx = Some(rx);
+        self.control_rx = rx;
         self.finish_job_waiters(ctx);
     }
 
@@ -417,6 +427,21 @@ impl EffectcraftApp {
         crate::color_picker::note_dialog(&ctx, self.dialog);
         // After the shortcuts, menus and header, which can replace the project (New, Open).
         self.ui.timeline.scope_links(self.session.script_ui.project_epoch);
+        // The AI Assistant pane takes the right of the body; the panels get the rest.
+        let mut body = body;
+        if self.assistant_open {
+            let w = 340.0_f32.min(body.width() * 0.5);
+            let pane = egui::Rect::from_min_max(egui::pos2(body.max.x - w, body.min.y), body.max);
+            body.max.x = pane.min.x - 4.0;
+            let mut child = ui.new_child(egui::UiBuilder::new().max_rect(pane));
+            let fill = child.visuals().panel_fill;
+            egui::Frame::NONE.fill(fill).inner_margin(12).show(&mut child, |ui| {
+                ui.set_min_size(ui.available_size());
+                ui.label(egui::RichText::new("AI Assistant").size(15.0).strong());
+                ui.add_space(6.0);
+                crate::assistant::pane(self, ui);
+            });
+        }
         self.dock_area(ui, body);
         #[cfg(not(target_arch = "wasm32"))]
         prefs_live::dropped_files(self, ui, full);

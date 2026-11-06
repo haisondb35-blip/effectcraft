@@ -1270,6 +1270,7 @@ Window
   ---
   Composition | window.panel {"panel":"composition"}
   Effect Controls | window.panel {"panel":"effectControls"} | F3, Cmd+Shift+T
+  AI Assistant | window.panel {"panel":"assistant"}
   Flowchart | window.panel {"panel":"flowchart"} | Cmd+F11
   Footage | window.panel {"panel":"footage"}
   Layer | window.panel {"panel":"layer"}
