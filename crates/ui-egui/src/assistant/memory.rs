@@ -367,9 +367,7 @@ impl Store {
         files.sort();
         for f in files {
             let Some(v) = std::fs::read(&f).ok().and_then(|b| serde_json::from_slice::<Value>(&b).ok()) else { continue };
-            let (Some(name), Some(port), Some(server)) =
-                (v.get("name").and_then(Value::as_str), v.get("port").and_then(Value::as_u64), v.get("server"))
-            else {
+            let (Some(name), Some(port), Some(server)) = (v.get("name").and_then(Value::as_str), v.get("port").and_then(Value::as_u64), v.get("server")) else {
                 continue;
             };
             let Ok(port) = u16::try_from(port) else { continue };
@@ -508,8 +506,7 @@ mod tests {
         };
         let server = |app: &str| json!({"type": "stdio", "command": format!("C:/ArtCraft/{app}-cli.exe"), "args": ["mcp", "--connect", "127.0.0.1:1"], "env": {"TOKEN": "t\"1"}});
         store.register("cadcraft", live_port, &server("cadcraft"));
-        std::fs::write(d.join("apps/wordcraft-1.json"), json!({"name": "wordcraft", "port": dead_port, "server": server("wordcraft")}).to_string())
-            .unwrap();
+        std::fs::write(d.join("apps/wordcraft-1.json"), json!({"name": "wordcraft", "port": dead_port, "server": server("wordcraft")}).to_string()).unwrap();
         std::fs::write(d.join("apps/bad-2.json"), json!({"name": "a b", "port": live_port, "server": {}}).to_string()).unwrap();
         let peers = store.peers("gridcraft");
         assert_eq!(peers.iter().map(|(n, _)| n.as_str()).collect::<Vec<_>>(), ["cadcraft"]);
@@ -522,10 +519,7 @@ mod tests {
         allow_peers(&mut args, &config);
         assert_eq!(args[2], "mcp__gridcraft,mcp__cadcraft");
         let codex = codex_peer_args(&config, "gridcraft").join(" ");
-        assert!(
-            codex.contains("mcp_servers.cadcraft.command=\"C:/ArtCraft/cadcraft-cli.exe\"") && !codex.contains("mcp_servers.gridcraft"),
-            "{codex}"
-        );
+        assert!(codex.contains("mcp_servers.cadcraft.command=\"C:/ArtCraft/cadcraft-cli.exe\"") && !codex.contains("mcp_servers.gridcraft"), "{codex}");
         assert!(codex.contains(r#"mcp_servers.cadcraft.env={TOKEN="t\"1"}"#), "{codex}");
         store.leave();
         assert!(store.peers("gridcraft").is_empty());
