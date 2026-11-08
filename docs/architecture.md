@@ -15,6 +15,7 @@ cpal or muda. Everything in L0 to L4, the egui UI and the web app also build for
 
 | Layer | Crate (`effectcraft-…`) | Responsibility |
 |---|---|---|
+| L0 | `craft-sync` | The synced cloud folder every Craft app shares (iCloud Drive, OneDrive, Google Drive, Dropbox): mirrors the AI conversations, keeps earlier versions of saved files, finds the copies a cloud keeps; same crate in every Craft app |
 | L0 | `time` | `Tick` (254 016 000 000 per second), rational frame rates incl. NTSC, SMPTE and drop-frame timecode |
 | L0 | `geom` | Vectors, matrices, quaternions, the layer transform (anchor, position, scale, orientation, rotation) |
 | L0 | `color` | sRGB and linear, HSL/HSV, luminance, the 38 blend modes, label colors |

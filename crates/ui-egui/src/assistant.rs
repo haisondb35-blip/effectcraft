@@ -1476,12 +1476,7 @@ pub fn pane(app: &mut crate::EffectcraftApp, ui: &mut egui::Ui) {
     let list_h = (ui.available_height() - input_h).max(80.0);
     egui::ScrollArea::vertical().max_height(list_h).auto_shrink([false, false]).stick_to_bottom(true).show(ui, |ui| {
         if a.messages.is_empty() {
-            ui.label(
-                egui::RichText::new(
-                    intro,
-                )
-                .color(t.text_dim),
-            );
+            ui.label(egui::RichText::new(intro).color(t.text_dim));
         }
         for (i, m) in a.messages.iter().enumerate() {
             match m.role {
