@@ -11,6 +11,7 @@
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 
 mod analysis;
+pub mod assistant_chat;
 mod background;
 pub mod cmd;
 mod footage;

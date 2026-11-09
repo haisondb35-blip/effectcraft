@@ -390,6 +390,11 @@ fn main() -> eframe::Result {
             // brian-local: the AI Assistant pane opens a channel of its own, and each project's
             // conversation is remembered in the folder all the Craft apps share.
             app.assistant.use_memory(effectcraft_ui_egui::assistant::Store::shared());
+            // Save chat with file: a project file's conversation goes into it as it is saved, and
+            // comes back when it is opened.
+            if app.assistant.memory.is_some() {
+                effectcraft_ui_egui::assistant::embed::install(&mut app.assistant);
+            }
             app.assistant.starter = Some(Box::new(|ctx| control_server::start_for_assistant(ctx.clone())));
             log::info!("app created; the window shows after its first frame");
             Ok(Box::new(Desktop {

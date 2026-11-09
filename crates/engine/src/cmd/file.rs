@@ -94,7 +94,9 @@ pub(crate) fn file_text(s: &Session, path: &str) -> Result<String> {
 
 fn save_to(s: &mut Session, path: &str) -> Result<Value> {
     let json = file_text(s, path)?;
-    s.services.write_file(path, json.as_bytes()).map_err(|e| EngineError::Other(format!("cannot write {path}: {e}")))?;
+    // Save chat with file: the desktop app's assistant conversation goes into a .ecproj file.
+    let json = if crate::xml_project::is_xml_path(path) { json.into_bytes() } else { crate::assistant_chat::hooked(path, json.into_bytes()) };
+    s.services.write_file(path, &json).map_err(|e| EngineError::Other(format!("cannot write {path}: {e}")))?;
     s.path = Some(path.to_string());
     s.mark_saved();
     s.note_project_path(path);
