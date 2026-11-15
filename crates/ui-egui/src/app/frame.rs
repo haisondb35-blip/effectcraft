@@ -519,6 +519,7 @@ impl EffectcraftApp {
         crate::color_picker::note_dialog(&ctx, self.dialog);
         // After the shortcuts, menus and header, which can replace the project (New, Open).
         self.ui.timeline.scope_links(self.session.script_ui.project_epoch);
+        panels::effect_controls::scope_lock(self);
         // The AI Assistant pane takes the right of the body; the panels get the rest.
         let mut body = body;
         if self.assistant_open {
