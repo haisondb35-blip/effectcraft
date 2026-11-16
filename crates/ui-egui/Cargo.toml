@@ -12,6 +12,7 @@ workspace = true
 [dependencies]
 # The synced cloud folder every Craft app shares (crates/craft-sync): iCloud Drive and the others.
 craft-sync = { path = "../craft-sync" }
+craft-mime = { workspace = true }
 craft-ui = { workspace = true }
 craft-quit = { workspace = true, features = ["egui"] }
 effectcraft-time = { workspace = true }
