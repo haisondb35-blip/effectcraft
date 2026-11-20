@@ -2,7 +2,9 @@ use super::write::*;
 use super::*;
 use crate::pixels::srgb_encode;
 
+mod descriptor_framing;
 mod fixed_adjustments;
+mod fixed_writers;
 mod integration;
 mod opt;
 mod scalar_blocks;
