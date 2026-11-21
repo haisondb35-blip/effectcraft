@@ -17,6 +17,7 @@
 
 mod aac;
 mod convert;
+mod craft_source;
 pub mod downmix;
 mod dpx;
 pub mod exr_channels;
@@ -62,6 +63,18 @@ impl From<filmcraft_media::MediaError> for MediaError {
             F::Unsupported(s) => MediaError::Unsupported(s),
             F::Io(s) | F::Offline(s) => MediaError::Io(s),
             F::Cancelled => MediaError::Cancelled,
+            other => MediaError::Decode(other.to_string()),
+        }
+    }
+}
+
+impl From<craft_media_source::MediaError> for MediaError {
+    fn from(e: craft_media_source::MediaError) -> Self {
+        use craft_media_source::MediaError as C;
+        match e {
+            C::Unsupported(s) => MediaError::Unsupported(s),
+            C::Io(s) | C::Offline(s) => MediaError::Io(s),
+            C::Cancelled => MediaError::Cancelled,
             other => MediaError::Decode(other.to_string()),
         }
     }
