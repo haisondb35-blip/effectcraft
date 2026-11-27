@@ -14,7 +14,11 @@ workspace = true
 craft-sync = { path = "../craft-sync" }
 craft-mime = { workspace = true }
 craft-ui = { workspace = true }
-craft-quit = { workspace = true, features = ["egui"] }
+craft-behavior = { workspace = true }
+craft-host = { workspace = true }
+craft-keymap = { workspace = true, features = ["egui"] }
+craft-theme = { workspace = true }
+craft-window = { workspace = true }
 effectcraft-time = { workspace = true }
 effectcraft-geom = { workspace = true }
 effectcraft-color = { workspace = true }
@@ -45,7 +49,7 @@ bytemuck = { workspace = true }
 # TLS as craft-update, so nothing new is built.
 ureq = { version = "3.4", default-features = false, features = ["rustls-no-provider", "_ring", "gzip", "platform-verifier"] }
 # Floating panels open in OS windows of their own on desktop; the web keeps them in the page.
-craft-ui = { workspace = true, features = ["native-windows"] }
+craft-ui = { workspace = true }
 craft-update = { workspace = true }
 # Waits for the display pass's error scopes (immediately ready on native wgpu).
 pollster = { workspace = true }
